@@ -14,11 +14,11 @@ module Haru
     end
 
     def commit()
-      PureHailDB.ib_trx_commit(@trx_ptr)
+      check_return_code(PureHailDB.ib_trx_commit(@trx_ptr))
     end
 
     def rollback()
-      PureHailDB.ib_trx_rollback(@trx_ptr)
+      check_return_code(PureHailDB.ib_trx_rollback(@trx_ptr))
     end
 
   end

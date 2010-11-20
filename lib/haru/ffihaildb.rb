@@ -98,6 +98,7 @@ module PureHailDB
   attach_function :ib_trx_rollback, [ :pointer ], DbError
 
   # miscellaneous functions
+  attach_function :ib_strerror, [ DbError ], :string
   attach_function :ib_api_version, [], :uint64
 
 end

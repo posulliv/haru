@@ -1,4 +1,5 @@
 require 'haru/ffihaildb'
+require 'haru/exceptions'
 
 module Haru
 
@@ -13,11 +14,11 @@ module Haru
     end
 
     def startup()
-      PureHailDB.ib_startup("BARRACUDA")
+      check_return_code(PureHailDB.ib_startup("BARRACUDA"))
     end
 
     def shutdown()
-      PureHailDB.ib_shutdown(PureHailDB::ShutdownType[:IB_SHUTDOWN_NORMAL])
+      check_return_code(PureHailDB.ib_shutdown(PureHailDB::ShutdownType[:IB_SHUTDOWN_NORMAL]))
     end
 
     def version()
@@ -107,6 +108,76 @@ module Haru
       PureHailDB.ib_cfg_set("log_group_home_dir", :string, data_file_path)
     end
 
+  end
+
+  def check_return_code(ret)
+    if PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_SUCCESS]
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_ERROR]
+      error = DatabaseError.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_OUT_OF_MEMORY]
+      error = OutOfMemory.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_OUT_OF_FILE_SPACE]
+      error = OutOfFileSpace.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_LOCK_WAIT]
+      error = LockWait.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_DEADLOCK]
+      error = DeadLock.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_DUPLICATE_KEY]
+      error = DuplicateKey.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_QUE_THR_SUSPENDED]
+      error = QueueThreadSuspended.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_MISSING_HISTORY]
+      error = MissingHistory.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_CLUSTER_NOT_FOUND]
+      error = ClusterNotFound.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_TABLE_NOT_FOUND]
+      error = TableNotFound.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_MUST_GET_MORE_FILE_SPACE]
+      error = MustGetMoreFileSpace.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_TABLE_IS_BEING_USED]
+      error = TableInUse.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_TOO_BIG_RECORD]
+      error = RecordTooBig.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_NO_REFERENCED_ROW]
+      error = NoReferencedRow.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_CANNOT_ADD_CONSTRAINT]
+      error = CannotAddConstraint.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    elsif PureHailDB::DbError[ret] == PureHailDB::DbError[:DB_CORRUPTION]
+      error = Corruption.new
+      error.no_backtrace = true
+      raise error, PureHailDB.ib_strerror(ret)
+    else
+    end
   end
 
 end

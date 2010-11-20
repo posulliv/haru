@@ -8,6 +8,7 @@ require 'ffi'
 require 'haru/ffihaildb'
 require 'haru/haildb'
 require 'haru/transaction'
+require 'haru/exceptions'
 
 module Haru
 end
