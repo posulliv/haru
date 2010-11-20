@@ -67,6 +67,10 @@ module PureHailDB
                    :IB_TRX_COMMITTED_IN_MEMORY,
                    :IB_TRX_PREPARED )
 
+  DictOp = enum( :TRX_DICT_OP_NONE, 0,
+                 :TRX_DICT_OP_TABLE,
+                 :TRX_DICT_OP_INDEX )
+
   LockMode = enum( :IB_LOCK_IS, 0,
                    :IB_LOCK_IX,
                    :IB_LOCK_S,
