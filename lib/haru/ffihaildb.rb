@@ -80,6 +80,10 @@ module PureHailDB
   attach_function :ib_startup, [ :string ], DbError
   attach_function :ib_shutdown, [ ShutdownType ], DbError
 
+  # database functions
+  attach_function :ib_database_create, [ :string ], :bool
+  attach_function :ib_database_drop, [ :string ], DbError
+
   # miscellaneous functions
   attach_function :ib_api_version, [], :uint64
 

@@ -13,6 +13,8 @@ class TestBasic < Test::Unit::TestCase
   should "start/stop a HailDB instance" do
     ot = HailDB.new
     ot.startup
+    ot.create_database("padraig")
+    ot.drop_database("padraig")
     ot.shutdown
   end
 

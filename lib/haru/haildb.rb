@@ -20,6 +20,13 @@ module Haru
       @ver = PureHailDB.ib_api_version
     end
 
+    def create_database(db_name)
+      PureHailDB.ib_database_create(db_name)
+    end
+
+    def drop_database(db_name)
+      PureHailDB.ib_database_drop(db_name)
+    end
 
   end
 
