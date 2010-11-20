@@ -84,6 +84,10 @@ module PureHailDB
   attach_function :ib_startup, [ :string ], DbError
   attach_function :ib_shutdown, [ ShutdownType ], DbError
 
+  # configuration functions
+  attach_function :ib_cfg_set, [ :string, :varargs ], DbError
+  attach_function :ib_cfg_get, [ :string, :pointer ], DbError
+
   # database functions
   attach_function :ib_database_create, [ :string ], :bool
   attach_function :ib_database_drop, [ :string ], DbError
