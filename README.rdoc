@@ -1,0 +1,7 @@
+= haru
+
+An interface to HailDB.
+
+== Copyright
+
+Copyright (c) 2010 Padraig O'Sullivan. See LICENSE for details.
