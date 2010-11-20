@@ -88,6 +88,11 @@ module PureHailDB
   attach_function :ib_database_create, [ :string ], :bool
   attach_function :ib_database_drop, [ :string ], DbError
 
+  # transaction functions
+  attach_function :ib_trx_begin, [ TrxLevel ], :pointer
+  attach_function :ib_trx_commit, [ :pointer ], DbError
+  attach_function :ib_trx_rollback, [ :pointer ], DbError
+
   # miscellaneous functions
   attach_function :ib_api_version, [], :uint64
 

@@ -15,6 +15,8 @@ class TestBasic < Test::Unit::TestCase
     ot.startup
     ot.create_database("padraig")
     ot.drop_database("padraig")
+    trx = Transaction.new
+    trx.commit
     ot.shutdown
   end
 
