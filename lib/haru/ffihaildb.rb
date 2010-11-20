@@ -2,8 +2,10 @@ require 'rubygems'
 require 'ffi'
 
 module PureHailDB
+
   extend FFI::Library
   ffi_lib 'haildb'
+
   # error codes
   DbError = enum( :DB_SUCCESS, 10,
                   :DB_ERROR,
@@ -55,6 +57,24 @@ module PureHailDB
                        :IB_SHUTDOWN_NO_IBUFMERGE_PURGE,
                        :IB_SHUTDOWN_NO_BUFPOOL_FLUSH )
 
+  TrxLevel = enum( :IB_TRX_READ_UNCOMMITTED, 0,
+                   :IB_TRX_READ_COMMITTED,
+                   :IB_TRX_REPEATABLE_READ,
+                   :IB_TRX_SERIALIZABLE )
+  
+  TrxState = enum( :IB_TRX_NOT_STARTED, 0,
+                   :IB_TRX_ACTIVE,
+                   :IB_TRX_COMMITTED_IN_MEMORY,
+                   :IB_TRX_PREPARED )
+
+  LockMode = enum( :IB_LOCK_IS, 0,
+                   :IB_LOCK_IX,
+                   :IB_LOCK_S,
+                   :IB_LOCK_X,
+                   :IB_LOCK_NOT_USED,
+                   :IB_LOCK_NONE,
+                   :IB_LOCK_NUM, :IB_LOCK_NONE )
+
   # startup/shutdown functions
   attach_function :ib_init, [], DbError
   attach_function :ib_startup, [ :string ], DbError
@@ -62,5 +82,6 @@ module PureHailDB
 
   # miscellaneous functions
   attach_function :ib_api_version, [], :uint64
+
 end
 
