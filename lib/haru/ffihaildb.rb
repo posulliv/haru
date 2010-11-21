@@ -96,6 +96,7 @@ module PureHailDB
   attach_function :ib_trx_begin, [ TrxLevel ], :pointer
   attach_function :ib_trx_commit, [ :pointer ], DbError
   attach_function :ib_trx_rollback, [ :pointer ], DbError
+  attach_function :ib_schema_lock_exclusive, [ :pointer ], DbError
 
   # miscellaneous functions
   attach_function :ib_strerror, [ DbError ], :string
