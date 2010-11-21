@@ -166,6 +166,14 @@ module Haru
       PureHailDB.ib_cfg_set("data_file_path", :string, data_file_path)
     end
 
+    #
+    # set the path to the directory where databases and tables will
+    # be created.
+    #
+    def set_data_home_dir(data_home_dir)
+      PureHailDB.ib_cfg_set("data_home_dir", :string, data_home_dir)
+    end
+
     # 
     # Set the path to HailDB log files.
     #

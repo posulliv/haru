@@ -4,6 +4,8 @@ module Haru
 
   class Table
 
+    attr_accessor :schema_ptr
+
     def initialize(db_name, table_name, page_size = 0)
       @name = db_name + "/" + table_name
       @schema_ptr = FFI::MemoryPointer.new :pointer
