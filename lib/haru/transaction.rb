@@ -55,7 +55,7 @@ module Haru
       id_ptr = FFI::MemoryPointer.new :pointer
       check_return_code(PureHailDB.ib_table_create(@trx_ptr, table.schema_ptr, id_ptr))
       # free the memory HailDB allocated
-      PureHailDB.ib_table_schema_delete(table.schema_ptr)
+      #PureHailDB.ib_table_schema_delete(table.schema_ptr)
     end
 
   end

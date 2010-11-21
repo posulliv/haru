@@ -26,10 +26,19 @@ class TestBasic < Test::Unit::TestCase
       @hail.drop_database("padraig")
     end
 
-    should "commit a transaction" do
-      trx = Transaction.new
-      trx.commit
-    end
+    should "create a table" do
+      @hail.create_database("padraig")
+      t = Table.new("padraig", "t1")
+      t.add_column("c1", PureHailDB::ColumnType[:IB_INT], PureHailDB::ColumnAttr[:IB_COL_UNSIGNED], 4)
+      t.add_index
+      t.add_index_column("c1")
+      tx = Transaction.new
+      tx.exclusive_schema_lock
+      tx.create_table(t)
+      tx.commit
+      @hail.drop_database("padraig")
+    end 
+
 
     teardown do
       @hail.shutdown
