@@ -14,21 +14,8 @@ class TestBasic < Test::Unit::TestCase
       @hail.startup
     end
 
-    should "retrieve API version" do
-      assert_equal 21474836480, @hail.version
-    end
-
-    should "create a database" do
-      @hail.create_database("padraig")
-    end
-
-    should "drop a database" do
+    should "throw an exception" do
       @hail.drop_database("padraig")
-    end
-
-    should "commit a transaction" do
-      trx = Transaction.new
-      trx.commit
     end
 
     teardown do

@@ -26,11 +26,14 @@ module Haru
     end
 
     def create_database(db_name)
-      PureHailDB.ib_database_create(db_name)
+      ret = PureHailDB.ib_database_create(db_name)
+      if ret != true
+        check_return_code(PureHailDB::DbError[:DB_ERROR])
+      end
     end
 
     def drop_database(db_name)
-      PureHailDB.ib_database_drop(db_name)
+      check_return_code(PureHailDB.ib_database_drop(db_name))
     end
 
     def enable_option(option)
