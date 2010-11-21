@@ -51,25 +51,11 @@ module Haru
       check_return_code(PureHailDB.ib_schema_lock_exclusive(@trx_ptr))
     end
 
-    def create_table(db_name, table_name, schema_hash)
-      schema_ptr = FFI::MemoryPointer.new :pointer
-      check_return_code(PureHailDB.ib_table_schema_create(name, schema_ptr, PureHailDB::TableFormat[:IB_TBL_COMPACT], 0))
-      check_return_code(PureHailDB.ib_table_schema_add_col(schema_ptr,
-                                                           col_name,
-                                                           col_type,
-                                                           PureHailDB::ColumnAttr[:IB_COL_NONE],
-                                                           0,
-                                                           sizeof_col_type))
-      # add a primary key to the table
-      idx_ptr = FFI::MemoryPointer.new :pointer
-      check_return_code(PureHailDB.ib_table_schema_add_index(schemaPtr, "PRIMARY", idx_ptr))
-      # set prefix length to 0
-      check_return_code(PureHailDB.ib_index_schema_add_col(idx_ptr, pk_col, 0))
-      check_return_code(PureHailDB.ib_index_schema_set_clustered(idx_ptr))
+    def create_table(table)
       id_ptr = FFI::MemoryPointer.new :pointer
-      check_return_code(PureHailDB.ib_table_create(@trx_ptr, schema_ptr, id_ptr))
+      check_return_code(PureHailDB.ib_table_create(@trx_ptr, table.schema_ptr, id_ptr))
       # free the memory HailDB allocated
-      PureHailDB.ib_table_schema_delete(schema_ptr)
+      PureHailDB.ib_table_schema_delete(table.schema_ptr)
     end
 
   end
