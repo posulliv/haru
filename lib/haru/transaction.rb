@@ -58,9 +58,8 @@ module Haru
       PureHailDB.ib_table_schema_delete(table.schema_ptr.read_pointer())
     end
 
-    def drop_table(db_name, table_name)
-      name = db_name + "/" + table_name
-      check_return_code(PureHailDB.ib_table_drop(@trx_ptr, name))
+    def drop_table(table)
+      check_return_code(PureHailDB.ib_table_drop(@trx_ptr, table.name))
     end
 
   end

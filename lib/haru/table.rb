@@ -4,6 +4,7 @@ module Haru
 
   class Table
 
+    attr_accessor :name
     attr_accessor :schema_ptr
 
     def initialize(db_name, table_name, page_size = 0)

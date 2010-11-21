@@ -23,7 +23,7 @@ class TestBasic < Test::Unit::TestCase
     tx.commit
     tx = Transaction.new
     tx.exclusive_schema_lock
-    tx.drop_table("padraig", "t1")
+    tx.drop_table(t)
     tx.commit
     hail.drop_database("padraig")
     hail.shutdown
