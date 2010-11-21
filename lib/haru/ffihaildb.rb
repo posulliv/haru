@@ -132,6 +132,7 @@ module PureHailDB
   attach_function :ib_index_schema_add_col, [ :pointer, :string, :uint64 ], DbError
   attach_function :ib_index_schema_set_clustered, [ :pointer ], DbError
   attach_function :ib_table_create, [ :pointer, :pointer, :pointer ], DbError
+  attach_function :ib_table_drop, [ :pointer, :string ], DbError
 
   # miscellaneous functions
   attach_function :ib_strerror, [ DbError ], :string

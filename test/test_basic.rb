@@ -21,6 +21,10 @@ class TestBasic < Test::Unit::TestCase
     tx.exclusive_schema_lock
     tx.create_table(t)
     tx.commit
+    tx = Transaction.new
+    tx.exclusive_schema_lock
+    tx.drop_table("padraig", "t1")
+    tx.commit
     hail.drop_database("padraig")
     hail.shutdown
   end
