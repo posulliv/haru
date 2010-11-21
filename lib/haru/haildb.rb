@@ -3,20 +3,37 @@ require 'haru/exceptions'
 
 module Haru
 
+  #
+  # The main HailDB class
+  #
   class HailDB
 
     WRITE_AND_FLUSH_ONCE_PER_SECOND = 0
     WRITE_AND_FLUSH_AT_EACH_COMMIT = 1
     WRITE_AT_COMMIT_FLUSH_ONCE_PER_SECOND = 2
 
+    #
+    # Initializes the HailDB engine. 
+    #
     def initialize()
       PureHailDB.ib_init
     end
 
+    #
+    # Start the HailDB engine. If this function is called on a non-existent
+    # database then based on the default or user-specified configuration
+    # settings it will create all the necessary files. If the database was 
+    # shut down cleanly but the user deleted the REDO log files then it will
+    # recreate the REDO log files.
+    #
     def startup()
       check_return_code(PureHailDB.ib_startup("BARRACUDA"))
     end
 
+    # 
+    # Shut down the HailDB engine. Closes all files and releases all memory
+    # on successful completion. 
+    #
     def shutdown()
       check_return_code(PureHailDB.ib_shutdown(PureHailDB::ShutdownType[:IB_SHUTDOWN_NORMAL]))
     end
@@ -25,6 +42,13 @@ module Haru
       PureHailDB.ib_api_version
     end
 
+    #
+    # create a database if it doesn't exist
+    #
+    # == parameters
+    #
+    #   * db_name   name of the database to create
+    #
     def create_database(db_name)
       ret = PureHailDB.ib_database_create(db_name)
       if ret != true
@@ -32,38 +56,61 @@ module Haru
       end
     end
 
+    #
+    # drop a database if it exists. All tables within the database
+    # are also dropped.
+    #
+    # == parameters
+    #
+    #   * db_name   name of the database to drop
+    #
     def drop_database(db_name)
       check_return_code(PureHailDB.ib_database_drop(db_name))
     end
 
-    def enable_option(option)
-      PureHailDB.ib_cfg_set(option, :bool, true)
-    end
-
-    def disable_option(option)
-      PureHailDB.ib_cfg_set(option, :bool, false)
-    end
-
+    # 
+    # Enables verbose logging.
+    #
     def enable_verbose_log()
       PureHailDB.ib_cfg_set("print_verbose_log", :bool, true)
     end
 
+    # 
+    # disables verbose logging. Reduces the number of messages written to
+    # log. This is enabled by default.
+    #
     def disable_verbose_log()
       PureHailDB.ib_cfg_set("print_verbose_log", :bool, false)
     end
 
+    # 
+    # enables rollback on timeout. When enabled, the complete transaction
+    # is rolled back on lock wait timeout. This is disabled by default.
+    #
     def enable_rollback_on_timeout()
       PureHailDB.ib_cfg_set("rollback_on_timeout", :bool, true)
     end
 
+    #
+    # disables rollback on timeout
+    #
     def disable_rollback_on_timeout()
       PureHailDB.ib_cfg_set("rollback_on_timeout", :bool, false)
     end
 
+    # 
+    # enables usage of the doublewrite buffer. It is enabled by default.
+    # For more information on this buffer see:
+    #
+    #   http://www.mysqlperformanceblog.com/2006/08/04/innodb-double-write/
+    #
     def enable_doublewrite()
       PureHailDB.ib_cfg_set("doublewrite", :bool, true)
     end
 
+    # 
+    # disables usage of the doublewrite buffer.
+    #
     def disable_doublewrite()
       PureHailDB.ib_cfg_set("doublewrite", :bool, false)
     end
@@ -92,6 +139,12 @@ module Haru
       PureHailDB.ib_cfg_set("file_per_table", :bool, false)
     end
 
+    # 
+    # sets the log flush frequency. Can be one of:
+    #  * WRITE_AND_FLUSH_ONCE_PER_SECOND 
+    #  * WRITE_AND_FLUSH_AT_EACH_COMMIT 
+    #  * WRITE_AT_COMMIT_FLUSH_ONCE_PER_SECOND
+    #
     def set_log_flush_frequency(frequency)
       if frequency > WRITE_AT_COMMIT_FLUSH_ONCE_PER_SECOND
         # exception?
@@ -99,14 +152,23 @@ module Haru
       PureHailDB.ib_cfg_set("flush_log_at_trx_commit", :uint8, frequency)
     end
 
+    # 
+    # sets the method with which to flush data.
+    #
     def set_flush_method(method)
       PureHailDB.ib_cfg_set("flush_method", :string, method)
     end
 
+    # 
+    # set the path to individual data files and their sizes
+    #
     def set_data_file_path(data_file_path)
       PureHailDB.ib_cfg_set("data_file_path", :string, data_file_path)
     end
 
+    # 
+    # Set the path to HailDB log files.
+    #
     def set_log_file_path(data_file_path)
       PureHailDB.ib_cfg_set("log_group_home_dir", :string, data_file_path)
     end

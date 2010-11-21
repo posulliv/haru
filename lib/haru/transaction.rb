@@ -2,6 +2,22 @@ require 'haru/ffihaildb'
 
 module Haru
 
+  #
+  # A transaction in HailDB
+  # http://www.innodb.com/doc/embedded_innodb-1.0/#id287624881
+  #
+  # A short example
+  #
+  #   require 'rubygems'
+  #   require 'haru'
+  #
+  #   trx = Transaction.new
+  #   trx.commit
+  #
+  #   trx = Transaction.new(Transaction::SERIALIZABLE)
+  #   trx.exclusive_schema_lock
+  #   trx.commit
+  #
   class Transaction
 
     READ_UNCOMMITTED = 0
@@ -9,20 +25,51 @@ module Haru
     REPEATABLE_READ = 2
     SERIALIZABLE = 3
 
+    # Creates a transaction with a specified isolation level and places
+    # the transaction in the active state.
+    #
+    # == parameters
+    #
+    #   * trx_level   the isolation level to use for the transaction
+    #
     def initialize(trx_level = READ_UNCOMMITTED)
       @trx_ptr = PureHailDB.ib_trx_begin(trx_level)
     end
 
+    # Commits the transaction and releases the schema latches.
     def commit()
       check_return_code(PureHailDB.ib_trx_commit(@trx_ptr))
     end
 
+    # Rolls back the transaction and releases the schema latches.
     def rollback()
       check_return_code(PureHailDB.ib_trx_rollback(@trx_ptr))
     end
 
+    # Latches the HailDB data dictionary in exclusive mode
     def exclusive_schema_lock()
       check_return_code(PureHailDB.ib_schema_lock_exclusive(@trx_ptr))
+    end
+
+    def create_table(db_name, table_name, schema_hash)
+      schema_ptr = FFI::MemoryPointer.new :pointer
+      check_return_code(PureHailDB.ib_table_schema_create(name, schema_ptr, PureHailDB::TableFormat[:IB_TBL_COMPACT], 0))
+      check_return_code(PureHailDB.ib_table_schema_add_col(schema_ptr,
+                                                           col_name,
+                                                           col_type,
+                                                           PureHailDB::ColumnAttr[:IB_COL_NONE],
+                                                           0,
+                                                           sizeof_col_type))
+      # add a primary key to the table
+      idx_ptr = FFI::MemoryPointer.new :pointer
+      check_return_code(PureHailDB.ib_table_schema_add_index(schemaPtr, "PRIMARY", idx_ptr))
+      # set prefix length to 0
+      check_return_code(PureHailDB.ib_index_schema_add_col(idx_ptr, pk_col, 0))
+      check_return_code(PureHailDB.ib_index_schema_set_clustered(idx_ptr))
+      id_ptr = FFI::MemoryPointer.new :pointer
+      check_return_code(PureHailDB.ib_table_create(@trx_ptr, schema_ptr, id_ptr))
+      # free the memory HailDB allocated
+      PureHailDB.ib_table_schema_delete(schema_ptr)
     end
 
   end

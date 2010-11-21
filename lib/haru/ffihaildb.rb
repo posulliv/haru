@@ -78,6 +78,32 @@ module PureHailDB
                    :IB_LOCK_NOT_USED,
                    :IB_LOCK_NONE,
                    :IB_LOCK_NUM, :IB_LOCK_NONE )
+  
+  TableFormat = enum( :IB_TBL_REDUNDANT, 0,
+                      :IB_TBL_COMPACT,
+                      :IB_TBL_DYNAMIC,
+                      :IB_TBL_COMPRESSED )
+
+  ColumnAttr = enum( :IB_COL_NONE, 0,
+                     :IB_COL_NOT_NULL,
+                     :IB_COL_UNSIGNED,
+                     :IB_COL_NOT_USED,
+                     :IB_COL_CUSTOM1, 8,
+                     :IB_COL_CUSTOM2, 16,
+                     :IB_COL_CUSTOM3, 32 )
+
+  ColumnType = enum( :IB_VARCHAR, 1,
+                     :IB_CHAR,
+                     :IB_BINARY,
+                     :IB_VARBINARY,
+                     :IB_BLOB,
+                     :IB_INT,
+                     :IB_SYS, 8,
+                     :IB_FLOAT,
+                     :IB_DOUBLE,
+                     :IB_DECIMAL,
+                     :IB_VARCHAR_ANYCHARSET,
+                     :IB_CHAR_ANYCHARSET )
 
   # startup/shutdown functions
   attach_function :ib_init, [], DbError
@@ -97,6 +123,14 @@ module PureHailDB
   attach_function :ib_trx_commit, [ :pointer ], DbError
   attach_function :ib_trx_rollback, [ :pointer ], DbError
   attach_function :ib_schema_lock_exclusive, [ :pointer ], DbError
+
+  # table/index functions
+  attach_function :ib_table_schema_create, [ :string, :pointer, TableFormat, :int64 ], DbError
+  attach_function :ib_table_schema_add_col, [ :pointer, :string, ColumnType, ColumnAttr, :uint16, :uint64 ], DbError
+  attach_function :ib_table_schema_add_index, [ :pointer, :string, :pointer ], DbError
+  attach_function :ib_index_schema_add_col, [ :pointer, :string, :uint64 ], DbError
+  attach_function :ib_index_schema_set_clustered, [ :pointer ], DbError
+  attach_function :ib_table_create, [ :pointer, :pointer, :pointer ], DbError
 
   # miscellaneous functions
   attach_function :ib_strerror, [ DbError ], :string
