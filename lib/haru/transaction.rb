@@ -21,6 +21,10 @@ module Haru
       check_return_code(PureHailDB.ib_trx_rollback(@trx_ptr))
     end
 
+    def exclusive_schema_lock()
+      check_return_code(PureHailDB.ib_schema_lock_exclusive(@trx_ptr))
+    end
+
   end
 
 end
