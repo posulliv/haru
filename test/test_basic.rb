@@ -14,7 +14,8 @@ class TestBasic < Test::Unit::TestCase
     hail.set_log_file_path(@data_dir)
     hail.startup
     t = Table.new("padraig", "t1")
-    t.add_column("c1", Haru::INT, Haru::UNSIGNED, 4)
+    #t.add_column("c1", Haru::INT, Haru::UNSIGNED, 4)
+    t.add_column("c1", Haru::VARCHAR, Haru::NONE, 32)
     t.add_index
     t.add_index_column("c1")
     tx = Transaction.new
@@ -26,7 +27,17 @@ class TestBasic < Test::Unit::TestCase
     assert_equal Haru::ACTIVE, state
     c = tx.open_table(t)
     c.lock()
-    c.insert_row({"c1" => 5})
+    for x in 1..1000 do
+      #c.insert_row({"c1" => x})
+      c.insert_row({"c1" => "blah"})
+    end
+    c.first_row()
+    key = "c1"
+    for x in 1..10 do
+      r = c.read_row()
+      puts "c1 : #{r[key]}"
+      c.next_row()
+    end
     c.close()
     tx.exclusive_schema_lock
     tx.drop_table(t)

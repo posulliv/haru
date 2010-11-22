@@ -138,13 +138,22 @@ module PureHailDB
   # cursor functions
   attach_function :ib_cursor_open_table, [ :string, :pointer, :pointer ], DbError
   attach_function :ib_cursor_close, [ :pointer ], DbError
+  attach_function :ib_cursor_reset, [ :pointer ], DbError
   attach_function :ib_cursor_lock, [ :pointer, LockMode ], DbError
   attach_function :ib_cursor_insert_row, [ :pointer, :pointer ], DbError
+  attach_function :ib_cursor_read_row, [ :pointer, :pointer ], DbError
+  attach_function :ib_cursor_next, [ :pointer ], DbError
+  attach_function :ib_cursor_prev, [ :pointer ], DbError
+  attach_function :ib_cursor_first, [ :pointer ], DbError
+  attach_function :ib_cursor_last, [ :pointer ], DbError
 
   # tuple functions
   attach_function :ib_clust_read_tuple_create, [ :pointer ], :pointer
   attach_function :ib_tuple_delete, [ :pointer ], :void
+  attach_function :ib_tuple_clear, [ :pointer ], :pointer
   attach_function :ib_col_set_value, [ :pointer, :uint64, :pointer , :uint64 ], DbError
+  attach_function :ib_col_get_value, [ :pointer, :uint64 ], :pointer
+  attach_function :ib_col_copy_value, [ :pointer, :uint64, :pointer, :uint64 ], :void
 
   # miscellaneous functions
   attach_function :ib_strerror, [ DbError ], :string

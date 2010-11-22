@@ -30,6 +30,7 @@ module Haru
 
     attr_accessor :name
     attr_accessor :schema_ptr
+    attr_accessor :columns
 
     def initialize(db_name, table_name, page_size = 0)
       @name = db_name + "/" + table_name
