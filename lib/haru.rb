@@ -10,6 +10,7 @@ require 'haru/haildb'
 require 'haru/transaction'
 require 'haru/table'
 require 'haru/cursor'
+require 'haru/constants'
 require 'haru/exceptions'
 
 module Haru

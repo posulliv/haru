@@ -14,16 +14,11 @@ module Haru
   #   trx = Transaction.new
   #   trx.commit
   #
-  #   trx = Transaction.new(Transaction::SERIALIZABLE)
+  #   trx = Transaction.new(Haru::SERIALIZABLE)
   #   trx.exclusive_schema_lock
   #   trx.commit
   #
   class Transaction
-
-    READ_UNCOMMITTED = 0
-    READ_COMMITTED = 1
-    REPEATABLE_READ = 2
-    SERIALIZABLE = 3
 
     # Creates a transaction with a specified isolation level and places
     # the transaction in the active state.

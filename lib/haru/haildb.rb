@@ -8,10 +8,6 @@ module Haru
   #
   class HailDB
 
-    WRITE_AND_FLUSH_ONCE_PER_SECOND = 0
-    WRITE_AND_FLUSH_AT_EACH_COMMIT = 1
-    WRITE_AT_COMMIT_FLUSH_ONCE_PER_SECOND = 2
-
     #
     # Initializes the HailDB engine. 
     #

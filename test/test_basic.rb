@@ -14,7 +14,7 @@ class TestBasic < Test::Unit::TestCase
     hail.set_log_file_path(@data_dir)
     hail.startup
     t = Table.new("padraig", "t1")
-    t.add_column("c1", PureHailDB::ColumnType[:IB_INT], PureHailDB::ColumnAttr[:IB_COL_UNSIGNED], 4)
+    t.add_column("c1", Haru::INT, Haru::UNSIGNED, 4)
     t.add_index
     t.add_index_column("c1")
     tx = Transaction.new
