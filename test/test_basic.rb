@@ -26,6 +26,7 @@ class TestBasic < Test::Unit::TestCase
     assert_equal Haru::ACTIVE, state
     c = tx.open_table(t)
     c.lock()
+    c.insert_row({"c1" => 5})
     c.close()
     tx.exclusive_schema_lock
     tx.drop_table(t)

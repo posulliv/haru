@@ -76,7 +76,7 @@ module Haru
     def open_table(table)
       crs_ptr = FFI::MemoryPointer.new :pointer
       check_return_code(PureHailDB.ib_cursor_open_table(table.name, @trx_ptr, crs_ptr))
-      cursor = Cursor.new(crs_ptr)
+      cursor = Cursor.new(crs_ptr, table)
     end
 
   end
