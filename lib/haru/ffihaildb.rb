@@ -134,6 +134,11 @@ module PureHailDB
   attach_function :ib_table_create, [ :pointer, :pointer, :pointer ], DbError
   attach_function :ib_table_drop, [ :pointer, :string ], DbError
 
+  # cursor functions
+  attach_function :ib_cursor_open_table, [ :string, :pointer, :pointer ], DbError
+  attach_function :ib_cursor_close, [ :pointer ], DbError
+  attach_function :ib_cursor_lock, [ :pointer, LockMode ], DbError
+
   # miscellaneous functions
   attach_function :ib_strerror, [ DbError ], :string
   attach_function :ib_api_version, [], :uint64

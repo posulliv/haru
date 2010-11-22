@@ -22,6 +22,9 @@ class TestBasic < Test::Unit::TestCase
     tx.create_table(t)
     tx.commit
     tx = Transaction.new
+    c = tx.open_table(t)
+    c.lock()
+    c.close()
     tx.exclusive_schema_lock
     tx.drop_table(t)
     tx.commit
