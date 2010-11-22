@@ -16,8 +16,8 @@ module Haru
     def add_column(col_name, col_type, col_attrs, col_size)
       check_return_code(PureHailDB.ib_table_schema_add_col(@schema_ptr.read_pointer(),
                                                            col_name,
-                                                           col_type,
-                                                           col_attrs,
+                                                           PureHailDB::ColumnType[col_type],
+                                                           PureHailDB::ColumnAttr[col_attrs],
                                                            0,
                                                            col_size))
     end
