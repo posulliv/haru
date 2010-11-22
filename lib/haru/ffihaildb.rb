@@ -123,6 +123,7 @@ module PureHailDB
   attach_function :ib_trx_commit, [ :pointer ], DbError
   attach_function :ib_trx_rollback, [ :pointer ], DbError
   attach_function :ib_schema_lock_exclusive, [ :pointer ], DbError
+  attach_function :ib_trx_state, [ :pointer ], TrxState
 
   # table/index functions
   attach_function :ib_table_schema_create, [ :string, :pointer, TableFormat, :int64 ], DbError

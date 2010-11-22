@@ -31,6 +31,22 @@ module Haru
       @trx_ptr = PureHailDB.ib_trx_begin(trx_level)
     end
 
+    # 
+    # return the statue the transaction is in
+    def state()
+      state = PureHailDB.ib_trx_state(@trx_ptr)
+      if PureHailDB::TrxState[state] == PureHailDB::TrxState[:IB_TRX_NOT_STARTED]
+        NOT_STARTED
+      elsif PureHailDB::TrxState[state] == PureHailDB::TrxState[:IB_TRX_ACTIVE]
+        ACTIVE
+      elsif PureHailDB::TrxState[state] == PureHailDB::TrxState[:IB_TRX_COMMITTED_IN_MEMORY]
+        COMMITTED_IN_MEMORY
+      elsif PureHailDB::TrxState[state] == PureHailDB::TrxState[:IB_TRX_PREPARED]
+        PREPARED
+      else
+      end
+    end
+
     # Commits the transaction and releases the schema latches.
     def commit()
       check_return_code(PureHailDB.ib_trx_commit(@trx_ptr))

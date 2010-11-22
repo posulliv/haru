@@ -22,6 +22,8 @@ class TestBasic < Test::Unit::TestCase
     tx.create_table(t)
     tx.commit
     tx = Transaction.new
+    state = tx.state
+    assert_equal Haru::ACTIVE, state
     c = tx.open_table(t)
     c.lock()
     c.close()

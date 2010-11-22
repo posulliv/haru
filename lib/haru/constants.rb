@@ -43,4 +43,12 @@ module Haru
   REPEATABLE_READ = 2
   SERIALIZABLE = 3
 
+  #
+  # transaction states
+  #
+  NOT_STARTED = 0
+  ACTIVE = 1
+  COMMITTED_IN_MEMORY = 2
+  PREPARED = 3
+
 end
