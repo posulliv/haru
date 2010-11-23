@@ -23,20 +23,9 @@ module Haru
       tuple_ptr = PureHailDB.ib_clust_read_tuple_create(@cursor_ptr.read_pointer())
       row.each_pair do |k,v|
         col = @table.column(k)
-        size = 0
-        if col.type == INT
-          size = 4
-        else 
-          size = v.size
-        end
-        #p = FFI::MemoryPointer.new(col.raw_type, v)
-        p = FFI::MemoryPointer.from_string(v)
-        check_return_code(PureHailDB.ib_col_set_value(tuple_ptr,
-                                                      col.num,
-                                                      p,
-                                                      size))
-
+        col.insert_data(tuple_ptr, v)
       end
+      check_return_code(PureHailDB.ib_cursor_insert_row(@cursor_ptr.read_pointer, tuple_ptr))
       PureHailDB.ib_tuple_delete(tuple_ptr)
     end
 
@@ -46,18 +35,7 @@ module Haru
       cols = @table.columns
       row = {}
       cols.each_pair do |k,v|
-        #res_ptr = FFI::MemoryPointer.new(v.raw_type, 32)
-        res_ptr = FFI::MemoryPointer.new(:char, 32)
-        #res_ptr = PureHailDB.ib_col_get_value(tuple_ptr, v.num)
-        PureHailDB.ib_col_copy_value(tuple_ptr, v.num, res_ptr, 32)
-        if res_ptr.null?
-          next
-        end
-        if v.type == INT
-          row[k] = res_ptr.read_int()
-        else
-          row[k] = res_ptr.read_string()
-        end
+        row[k] = v.get_data(tuple_ptr)
       end
       PureHailDB.ib_tuple_delete(tuple_ptr)
 

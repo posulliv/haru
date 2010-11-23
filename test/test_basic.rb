@@ -8,14 +8,14 @@ class TestBasic < Test::Unit::TestCase
 
   should "create a table" do
     hail = HailDB.new
-    hail.create_database("padraig")
     hail.set_data_file_path(@data_dir + "/ibdata1:10M:autoextend")
     hail.set_data_home_dir(@data_dir)
     hail.set_log_file_path(@data_dir)
     hail.startup
+    hail.create_database("padraig")
     t = Table.new("padraig", "t1")
-    #t.add_column("c1", Haru::INT, Haru::UNSIGNED, 4)
-    t.add_column("c1", Haru::VARCHAR, Haru::NONE, 32)
+    t.add_column("c1", Haru::INT, Haru::UNSIGNED, 4)
+    t.add_column("c2", Haru::VARCHAR, Haru::NONE, 32)
     t.add_index
     t.add_index_column("c1")
     tx = Transaction.new
@@ -27,15 +27,15 @@ class TestBasic < Test::Unit::TestCase
     assert_equal Haru::ACTIVE, state
     c = tx.open_table(t)
     c.lock()
-    for x in 1..1000 do
-      #c.insert_row({"c1" => x})
-      c.insert_row({"c1" => "blah"})
+    for x in 0..9 do
+      c.insert_row({"c1" => x, "c2" => "blah"})
     end
     c.first_row()
     key = "c1"
+    key1 = "c2"
     for x in 1..10 do
       r = c.read_row()
-      puts "c1 : #{r[key]}"
+      puts "c1 : #{r[key]} : #{r[key1]}"
       c.next_row()
     end
     c.close()

@@ -24,6 +24,33 @@ module Haru
       end
     end
 
+    def insert_data(tuple_ptr, data)
+      case @type
+      when INT
+        check_return_code(PureHailDB.ib_tuple_write_u32(tuple_ptr, 
+                                                        @num,
+                                                        data))
+      when VARCHAR
+        p = FFI::MemoryPointer.from_string(data)
+        check_return_code(PureHailDB.ib_col_set_value(tuple_ptr,
+                                                      @num,
+                                                      p,
+                                                      @size))
+      end
+    end
+
+    def get_data(tuple_ptr)
+      case @type
+      when INT
+        res_ptr = FFI::MemoryPointer.new :uint32
+        check_return_code(PureHailDB.ib_tuple_read_u32(tuple_ptr, @num, res_ptr))
+        res_ptr.read_int()
+      when VARCHAR
+        res_ptr = PureHailDB.ib_col_get_value(tuple_ptr, @num)
+        res_ptr.read_string()
+      end
+    end
+
   end
 
   class Table
