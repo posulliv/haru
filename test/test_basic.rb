@@ -13,9 +13,10 @@ class TestBasic < Test::Unit::TestCase
     hail.set_log_file_path(@data_dir)
     hail.startup
     hail.create_database("padraig")
+    # create table t1 (c1 int, c2 varchar(32), primary key(c1))
     t = Table.new("padraig", "t1")
-    t.add_column("c1", Haru::INT, Haru::UNSIGNED, 4)
-    t.add_column("c2", Haru::VARCHAR, Haru::NONE, 32)
+    t.add_integer_column("c1")
+    t.add_string_column("c2", 32)
     t.add_index
     t.add_index_column("c1")
     tx = Transaction.new

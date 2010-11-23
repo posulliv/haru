@@ -156,6 +156,10 @@ module PureHailDB
   attach_function :ib_col_copy_value, [ :pointer, :uint64, :pointer, :uint64 ], :void
   attach_function :ib_tuple_write_u32, [ :pointer, :uint64, :uint32 ], DbError
   attach_function :ib_tuple_read_u32, [ :pointer, :uint64, :pointer ], DbError
+  attach_function :ib_tuple_write_float, [ :pointer, :uint64, :float ], DbError
+  attach_function :ib_tuple_read_float, [ :pointer, :uint64, :pointer ], DbError
+  attach_function :ib_tuple_write_double, [ :pointer, :uint64, :double ], DbError
+  attach_function :ib_tuple_read_double, [ :pointer, :uint64, :pointer ], DbError
 
   # miscellaneous functions
   attach_function :ib_strerror, [ DbError ], :string
